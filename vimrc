@@ -3,6 +3,17 @@ set encoding=utf-8
 " "Infect Vim!"
 execute pathogen#infect()
 
+" Basic stuff not in sensible.vim
+set number
+set nowrap
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set expandtab
+set ignorecase
+set smartcase
+set spell
+
 " Theme
 colorscheme dracula
 
