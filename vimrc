@@ -1,5 +1,6 @@
 " PaG Vim Config.
 set encoding=utf-8
+
 " "Infect Vim!"
 execute pathogen#infect()
 
