@@ -15,6 +15,20 @@ set ignorecase
 set smartcase
 set spell
 
+" ---- Disable directional keys ----
+map <up> <nop>
+map <down> <nop>
+map <left> <nop>
+map <right> <nop>
+imap <up> <nop>
+imap <down> <nop>
+imap <left> <nop>
+imap <right> <nop>
+
+" Map tab and shift-tab to cycle through buffers
+nnoremap <TAB> :bn<CR>
+nnoremap <S-TAB> :bp<CR>
+
 " Theme
 colorscheme dracula
 
@@ -29,6 +43,13 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+
+" ---- Airline ----
+let g:airline#extensions#tabline#enabled = 1 " Enable the list of buffers
+let g:airline#extensions#tabline#fnamemod = ':t' " Show just the filename
+let g:airline#extensions#tabline#switch_buffers_and_tabs = 1
+let g:airline#extensions#tabline#buffer_idx_mode = 1
+let g:airline_theme='dracula'
 
 " Vim-Gitgutter
 if executable('git')
