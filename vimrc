@@ -32,10 +32,10 @@ nnoremap <S-TAB> :bp<CR>
 " Theme
 colorscheme dracula
 
-" NerdTree
+" ---- NerdTree ----
 map <F2> :NERDTreeToggle<CR>
 
-" Syntastic
+" ---- Syntastic ----
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
@@ -51,10 +51,14 @@ let g:airline#extensions#tabline#switch_buffers_and_tabs = 1
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 let g:airline_theme='dracula'
 
-" Vim-Gitgutter
+" ---- Vim-Gitgutter ----
 if executable('git')
    let g:gitgutter_highlight_lines = 1  " Turn on gitgutter highlighting
 else
     let g:gitgutter_git_executable = '/bin/true'
     let g:gitgutter_enabled = 0
 endif
+
+" ---- FZF ----
+nnoremap <C-p> :Files<Cr>
+
