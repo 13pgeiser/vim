@@ -108,20 +108,20 @@ install_plugin https://github.com/airblade/vim-gitgutter.git
 install_plugin https://github.com/tpope/vim-sensible.git
 install_plugin https://github.com/tpope/vim-surround.git
 
-if [[ ! -e $VIM_FOLDER/bundle/fzf/fzf ]]; then
+if [[ ! -e $VIM_FOLDER/bundle/fzf/bin/fzf ]]; then
     case "$OSTYPE" in
         "msys")
             ARCHIVE=fzf-0.17.5-windows_amd64.zip
             download https://github.com/junegunn/fzf-bin/releases/download/0.17.5/$ARCHIVE a5f20ae3e8604ed8c1ed216bf0ead83a
             unzip  $ARCHIVE
-            mv fzf $VIM_FOLDER/bundle/fzf/
+            mv fzf $VIM_FOLDER/bundle/fzf/bin/
             rm -f $ARCHIVE
         ;;
         "linux-gnu")
             ARCHIVE=fzf-0.17.5-linux_amd64.tgz
             download https://github.com/junegunn/fzf-bin/releases/download/0.17.5/$ARCHIVE b5efb3d1655193d842b683f693c73d09
             tar xvzf $ARCHIVE
-            mv fzf $VIM_FOLDER/bundle/fzf/
+            mv fzf $VIM_FOLDER/bundle/fzf/bin/
             rm -f $ARCHIVE
         ;;
         *)
