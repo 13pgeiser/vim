@@ -1,10 +1,21 @@
 " PaG Vim Config.
 set encoding=utf-8
-language messages English_United States
+set langmenu=en_US.UTF-8
+:let $LANG = 'en'
 
 " "Infect Vim!"
 set nocp
 execute pathogen#infect()
+
+" ---- Change font ----
+if has('gui_running')
+    if has("win64") || has("win32")
+        set guifont=Consolas:h10:cDEFAULT
+        au GUIEnter * simalt ~x " Maximize
+    else
+        set guifont=Liberation\ Mono\ 10.
+    endif
+endif
 
 " Basic stuff not in sensible.vim
 set number
@@ -16,6 +27,13 @@ set expandtab
 set ignorecase
 set smartcase
 set spell
+
+" ---- SYNTAX ----
+syntax on
+set showmatch
+set modeline
+au FileType python setlocal tabstop=8 expandtab shiftwidth=4 softtabstop=4
+au FileType text setlocal tw=140
 
 " ---- Disable directional keys ----
 map <up> <nop>

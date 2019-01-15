@@ -105,7 +105,7 @@ install_plugin https://github.com/vim-airline/vim-airline.git
 install_plugin https://github.com/vim-airline/vim-airline-themes.git
 install_plugin https://github.com/tpope/vim-fugitive.git
 install_plugin https://github.com/airblade/vim-gitgutter.git
-install_plugin https://github.com/tpope/vim-sensible.git^
+install_plugin https://github.com/tpope/vim-sensible.git
 install_plugin https://github.com/tpope/vim-surround.git
 
 if [[ ! -e $VIM_FOLDER/bundle/fzf/fzf ]]; then
