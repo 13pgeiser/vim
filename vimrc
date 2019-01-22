@@ -4,7 +4,7 @@ set langmenu=en_US.UTF-8
 :let $LANG = 'en'
 
 " "Infect Vim!"
-set nocp
+set nocompatible
 execute pathogen#infect()
 
 " ---- Change font ----
@@ -55,7 +55,7 @@ nnoremap <F3> :cnext<CR>
 nnoremap <F4> :cprev<CR>
 
 " Theme
-colorscheme dracula
+colorscheme onedark
 
 " ---- NerdTree ----
 map <F2> :NERDTreeToggle<CR>
@@ -72,7 +72,6 @@ let g:airline#extensions#tabline#enabled = 1 " Enable the list of buffers
 let g:airline#extensions#tabline#fnamemod = ':t' " Show just the filename
 let g:airline#extensions#tabline#switch_buffers_and_tabs = 1
 let g:airline#extensions#tabline#buffer_idx_mode = 1
-let g:airline_theme='dracula'
 
 " ---- Vim-Gitgutter ----
 if executable('git')

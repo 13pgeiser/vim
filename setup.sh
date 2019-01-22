@@ -96,7 +96,7 @@ function install_plugin
 }
 
 install_plugin https://github.com/mileszs/ack.vim.git
-install_plugin https://github.com/dracula/vim.git dracula
+install_plugin https://github.com/joshdick/onedark.vim.git
 install_plugin https://github.com/junegunn/fzf.git
 install_plugin https://github.com/junegunn/fzf.vim.git
 install_plugin https://github.com/scrooloose/nerdtree.git
