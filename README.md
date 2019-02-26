@@ -1,5 +1,7 @@
 # My Vim configuration
 
+[![Build Status](https://travis-ci.org/13pgeiser/vim.svg?branch=master)](https://travis-ci.org/13pgeiser/vim)
+
 My personal vim configuration to make it "usable" ;-)
 
 ## Installing
