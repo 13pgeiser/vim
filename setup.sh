@@ -61,12 +61,12 @@ case "$OSTYPE" in
         if [ -v DISPLAY ]; then
             if ! dpkg-query -l vim-gtk3 2>/dev/null 1>/dev/null; then
                 echo "Installing vim-gtk3"
-                sudo apt-get update && sudo apt-get install vim-gtk3
+                sudo apt-get update && sudo apt-get -y install vim-gtk3
             fi
         else
             if ! dpkg-query -l vim-nox 2>/dev/null 1>/dev/null; then
                 echo "Installing vim-nox"
-                sudo apt-get update && sudo apt-get install vim-nox
+                sudo apt-get update && sudo apt-get -y install vim-nox
             fi
         fi
         ;;
@@ -144,7 +144,7 @@ if [[ ! -e $VIM_FOLDER/ag ]]; then
             echo "Check for AG"
             if ! dpkg-query -l silversearcher-ag 2>/dev/null 1>/dev/null; then
                 echo "Installing silversearcher-ag"
-                sudo apt-get update && sudo apt-get install silversearcher-ag
+                sudo apt-get update && sudo apt-get install -y silversearcher-ag
             fi
         ;;
         *)
