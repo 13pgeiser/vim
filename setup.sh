@@ -4,19 +4,6 @@ set -e
 # Folder where this script lives in.
 SCRIPT_FOLDER=`dirname "$(readlink -f "$0")"`
 
-# VIM_FOLDER
-case "$OSTYPE" in
-    "msys")
-		VIM_FOLDER="$SCRIPT_FOLDER/vim81"
-        ;;
-    "linux-gnu")
-		VIM_FOLDER="$SCRIPT_FOLDER"
-        ;;
-    *)
-        fatal "Unsupported OS: $OSTYPE"
-        ;;
-esac
-
 # End of story....
 function fatal
 {
@@ -25,6 +12,19 @@ function fatal
     echo "**********************************************"
     exit 1
 }
+
+# VIM_FOLDER
+case "$OSTYPE" in
+    msys)
+		VIM_FOLDER="$SCRIPT_FOLDER/vim81"
+        ;;
+    linux*)
+		VIM_FOLDER="$SCRIPT_FOLDER"
+        ;;
+    *)
+        fatal "Unsupported OS: $OSTYPE"
+        ;;
+esac
 
 CURL="curl -kSL"
 if [[ -v http_proxy ]]; then
@@ -57,7 +57,7 @@ case "$OSTYPE" in
             rm -rf vim
         fi
         ;;
-    "linux-gnu")
+    linux*)
         if [ -v DISPLAY ]; then
             if ! dpkg-query -l vim-gtk3 2>/dev/null 1>/dev/null; then
                 echo "Installing vim-gtk3"
