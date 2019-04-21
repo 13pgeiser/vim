@@ -113,21 +113,27 @@ if [[ ! -e $VIM_FOLDER/bundle/fzf/bin/fzf ]]; then
         "msys")
             ARCHIVE=fzf-0.17.5-windows_amd64.zip
             download https://github.com/junegunn/fzf-bin/releases/download/0.17.5/$ARCHIVE a5f20ae3e8604ed8c1ed216bf0ead83a
-            unzip  $ARCHIVE
-            mv fzf $VIM_FOLDER/bundle/fzf/bin/
-            rm -f $ARCHIVE
         ;;
         "linux-gnu")
             ARCHIVE=fzf-0.17.5-linux_amd64.tgz
             download https://github.com/junegunn/fzf-bin/releases/download/0.17.5/$ARCHIVE b5efb3d1655193d842b683f693c73d09
-            tar xvzf $ARCHIVE
-            mv fzf $VIM_FOLDER/bundle/fzf/bin/
-            rm -f $ARCHIVE
+        ;;
+        "linux-gnueabihf")
+            ARCHIVE=fzf-0.17.5-linux_arm7.tgz
+            download https://github.com/junegunn/fzf-bin/releases/download/0.17.5/$ARCHIVE 63524a4ad1af20f04beef3be405f746b
         ;;
         *)
             fatal "FZF: Unsupported OS: $OSTYPE"
         ;;
     esac
+    echo "${ARCHIVE##*.}"
+    if [ "${ARCHIVE##*.}" == "zip" ]; then
+      unzip  $ARCHIVE
+    else
+      tar xzf $ARCHIVE
+    fi
+    mv fzf $VIM_FOLDER/bundle/fzf/bin/
+    rm -f $ARCHIVE
 fi
 
 if [[ ! -e $VIM_FOLDER/ag ]]; then
@@ -140,7 +146,7 @@ if [[ ! -e $VIM_FOLDER/ag ]]; then
             rm -rf ag
             rm -f $ARCHIVE
         ;;
-        "linux-gnu")
+        linux-*)
             echo "Check for AG"
             if ! dpkg-query -l silversearcher-ag 2>/dev/null 1>/dev/null; then
                 echo "Installing silversearcher-ag"
