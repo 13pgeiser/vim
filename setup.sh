@@ -109,14 +109,15 @@ install_plugin https://github.com/tpope/vim-sensible.git
 install_plugin https://github.com/tpope/vim-surround.git
 install_plugin https://github.com/Valloric/YouCompleteMe.git
 
-if [[ ! -e $VIM_FOLDER/bundle/YouCompleteMe/installed ]]; then
+if [[ ! -e $VIM_FOLDER/bundle/YouCompleteMe/.installed ]]; then
     case "$OSTYPE" in
         "msys")
         ;;
-        "linux-gnu")
+        linux*)
           sudo apt-get install build-essential cmake python3-dev
           cd $VIM_FOLDER/bundle/YouCompleteMe/
           python3 ./install.py --clang-completer
+          touch .installed
           cd ../..
         ;;
         *)
