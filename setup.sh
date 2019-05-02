@@ -90,7 +90,7 @@ function install_plugin
     fi
     mkdir -p $VIM_FOLDER/bundle
     if [[ ! -e $VIM_FOLDER/bundle/$directory ]]; then
-        git clone $1 $VIM_FOLDER/bundle/$directory --depth 1
+        git clone $1 $VIM_FOLDER/bundle/$directory --depth 1 --recurse-submodules
         rm -rf $VIM_FOLDER/bundle/$directory/.git
     fi
 }
@@ -107,6 +107,23 @@ install_plugin https://github.com/tpope/vim-fugitive.git
 install_plugin https://github.com/airblade/vim-gitgutter.git
 install_plugin https://github.com/tpope/vim-sensible.git
 install_plugin https://github.com/tpope/vim-surround.git
+install_plugin https://github.com/Valloric/YouCompleteMe.git
+
+if [[ ! -e $VIM_FOLDER/bundle/YouCompleteMe/installed ]]; then
+    case "$OSTYPE" in
+        "msys")
+        ;;
+        "linux-gnu")
+          sudo apt-get install build-essential cmake python3-dev
+          cd $VIM_FOLDER/bundle/YouCompleteMe/
+          python3 ./install.py --clang-completer
+          cd ../..
+        ;;
+        *)
+            fatal "YouCompleteMe: Unsupported OS: $OSTYPE"
+        ;;
+    esac
+fi
 
 if [[ ! -e $VIM_FOLDER/bundle/fzf/bin/fzf ]]; then
     case "$OSTYPE" in
