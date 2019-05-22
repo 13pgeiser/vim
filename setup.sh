@@ -114,7 +114,12 @@ if [[ ! -e $VIM_FOLDER/bundle/YouCompleteMe/.installed ]]; then
         "msys")
         ;;
         linux*)
-          sudo apt-get install -y build-essential cmake python3-dev
+          sudo apt-get install -y build-essential python3-dev
+          if hash cmake 2>/dev/null; then
+            echo "cmake already installed"
+          else
+            sudo apt-get install -y cmake
+          fi
           cd $VIM_FOLDER/bundle/YouCompleteMe/
           python3 ./install.py --clang-completer
           touch .installed
