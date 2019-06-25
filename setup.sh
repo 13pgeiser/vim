@@ -48,8 +48,10 @@ function download
 case "$OSTYPE" in
     "msys")
         if [ ! -d "$VIM_FOLDER" ]; then
-            ARCHIVE=gvim_8.1.0536_x86.zip
-            download https://github.com/vim/vim-win32-installer/releases/download/v8.1.0536/$ARCHIVE 1a0b486a0a2a6912698b0ef903db1180
+            #ARCHIVE=gvim_8.1.1587_x86.zip
+            #download https://github.com/vim/vim-win32-installer/releases/download/v8.1.1587/$ARCHIVE db30dacc61307e4e75e48d12d3538c2f
+            ARCHIVE=gvim_8.1.1587_x64.zip
+            download https://github.com/vim/vim-win32-installer/releases/download/v8.1.1587/$ARCHIVE 8addef4e29a91cb73707f32567edda1d
             echo "Unpacking $ARCHIVE"
             unzip -q $ARCHIVE
             rm -f $ARCHIVE
@@ -107,13 +109,20 @@ install_plugin https://github.com/tpope/vim-fugitive.git
 install_plugin https://github.com/airblade/vim-gitgutter.git
 install_plugin https://github.com/tpope/vim-sensible.git
 install_plugin https://github.com/tpope/vim-surround.git
-install_plugin https://github.com/Valloric/YouCompleteMe.git
+
+case "$OSTYPE" in
+	"msys")
+	;;
+  linux-*)
+		install_plugin https://github.com/Valloric/YouCompleteMe.git
+	;;
+esac
 
 if [[ ! -e $VIM_FOLDER/bundle/YouCompleteMe/.installed ]]; then
     case "$OSTYPE" in
         "msys")
         ;;
-        linux*)
+        linux-*)
           sudo apt-get install -y build-essential python3-dev
           if hash cmake 2>/dev/null; then
             echo "cmake already installed"
