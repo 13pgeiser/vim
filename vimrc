@@ -27,6 +27,7 @@ set expandtab
 set ignorecase
 set smartcase
 set spell
+set colorcolumn=120
 
 " ---- SYNTAX ----
 syntax on
