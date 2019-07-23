@@ -27,8 +27,8 @@ case "$OSTYPE" in
 esac
 
 CURL="curl -kSL"
-if [[ -v http_proxy ]]; then
-	CURL="$CURL --proxy $http_proxy"
+if [[ -v HTTP_PROXY ]]; then
+	CURL="$CURL --proxy $HTTP_PROXY"
 fi
 
 # Download file and check md5 sum
@@ -37,7 +37,9 @@ function download
     ARCHIVE=`basename $1`
     if [[ ! -e $ARCHIVE ]]; then
         echo "Downloading $ARCHIVE"
-        $CURL $1 --progress-bar -o $ARCHIVE
+        cmd="$CURL $1 --progress-bar -o $ARCHIVE"
+		echo $cmd
+		$cmd
     fi
     if [[ "`md5sum $ARCHIVE | cut -d' ' -f1`" != "$2" ]]; then
         fatal "Invalid MD5 for $ARCHIVE"
