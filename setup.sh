@@ -112,35 +112,35 @@ install_plugin https://github.com/airblade/vim-gitgutter.git
 install_plugin https://github.com/tpope/vim-sensible.git
 install_plugin https://github.com/tpope/vim-surround.git
 
-case "$OSTYPE" in
-	"msys")
-	;;
-  linux-*)
-		install_plugin https://github.com/Valloric/YouCompleteMe.git
-	;;
-esac
-
-if [[ ! -e $VIM_FOLDER/bundle/YouCompleteMe/.installed ]]; then
-    case "$OSTYPE" in
-        "msys")
-        ;;
-        linux-*)
-          sudo apt-get install -y build-essential python3-dev libclang-dev
-          if hash cmake 2>/dev/null; then
-            echo "cmake already installed"
-          else
-            sudo apt-get install -y cmake
-          fi
-          cd $VIM_FOLDER/bundle/YouCompleteMe/
-          python3 ./install.py --system-libclang --clang-completer
-          touch .installed
-          cd ../..
-        ;;
-        *)
-            fatal "YouCompleteMe: Unsupported OS: $OSTYPE"
-        ;;
-    esac
-fi
+#case "$OSTYPE" in
+#	"msys")
+#	;;
+#  linux-*)
+#		install_plugin https://github.com/Valloric/YouCompleteMe.git
+#	;;
+#esac
+#
+#if [[ ! -e $VIM_FOLDER/bundle/YouCompleteMe/.installed ]]; then
+#    case "$OSTYPE" in
+#        "msys")
+#        ;;
+#        linux-*)
+#          sudo apt-get install -y build-essential python3-dev libclang-dev
+#          if hash cmake 2>/dev/null; then
+#            echo "cmake already installed"
+#          else
+#            sudo apt-get install -y cmake
+#          fi
+#          cd $VIM_FOLDER/bundle/YouCompleteMe/
+#          python3 ./install.py --system-libclang --clang-completer
+#          touch .installed
+#          cd ../..
+#        ;;
+#        *)
+#            fatal "YouCompleteMe: Unsupported OS: $OSTYPE"
+#        ;;
+#    esac
+#fi
 
 if [[ ! -e $VIM_FOLDER/bundle/fzf/bin/fzf ]]; then
     case "$OSTYPE" in
