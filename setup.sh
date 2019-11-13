@@ -153,6 +153,7 @@ if [[ ! -e $PLUGIN/.installed ]]; then
             touch $PLUGIN/.installed
             ;;
         linux-*)
+            sudo apt-get update
             sudo apt-get install -y build-essential python3-dev libclang-dev
             if hash cmake 2>/dev/null; then
                 echo "cmake already installed"
