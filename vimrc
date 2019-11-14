@@ -3,6 +3,9 @@
 " F2 -> toggle NerdTree
 " F3 -> previous error
 " F4 -> next error
+" F5 -> YCM Force compile and diagnostics
+" F6 -> YCM Goto
+" F7 -> YCM FixIt
 "
 set encoding=utf-8
 set langmenu=en_US.UTF-8
@@ -78,7 +81,7 @@ let g:airline#extensions#tabline#enabled = 1 " Enable the list of buffers
 let g:airline#extensions#tabline#fnamemod = ':t' " Show just the filename
 let g:airline#extensions#tabline#switch_buffers_and_tabs = 1
 let g:airline#extensions#tabline#buffer_idx_mode = 1
-let g:airline_powerline_fonts = 1
+" let g:airline_powerline_fonts = 1
 
 " ---- Vim-Gitgutter ----
 if executable('git')
@@ -92,4 +95,10 @@ endif
 nnoremap <C-p> :Files<Cr>
 
 " ---- YouCompleteMe ----
+let g:ycm_echo_current_diagnostic = 1
+let g:ycm_collect_identifiers_from_tags_files = 1
+let g:ycm_autoclose_preview_window_after_completion = 1
+nnoremap <F5> :YcmDiags<CR>
+nnoremap <F6> :YcmCompleter GoTo<CR>
+nnoremap <F7> :FixIt<CR>
 
