@@ -144,12 +144,14 @@ if [[ ! -e $PLUGIN/.installed ]]; then
             PATH=`pwd`/$FOLDER:$PATH
             download_unpack https://netix.dl.sourceforge.net/project/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/8.1.0/threads-posix/seh/x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z 55c00ca779471df6faf1c9320e49b5a9
             PATH=`pwd`/$FOLDER/mingw64/bin:$PATH
+            cp -rv ./$FOLDER/mingw64/bin/*.dll ./third_party/ycmd/
             download_unpack https://github.com/Kitware/CMake/releases/download/v3.15.5/cmake-3.15.5-win64-x64.zip f97acefa282588f05c6528d6db37c570 "nofolder"
             PATH=`pwd`/$FOLDER/bin:$PATH
             download_unpack https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-win.zip 14764496d99bb5ea99e761dab9a38bc4
             PATH=`pwd`/$FOLDER:$PATH
             $PYTHON/python.exe install.py --ninja --clang-completer
             cp $PYTHON/python37.dll $VIM_FOLDER
+            cp ./third_party/ycmd/third_party/clang/lib/libclang.dll ./third_party/ycmd/
             touch $PLUGIN/.installed
             ;;
         linux-*)
