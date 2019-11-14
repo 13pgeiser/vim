@@ -1,4 +1,9 @@
 " PaG Vim Config.
+"
+" F2 -> toggle NerdTree
+" F3 -> previous error
+" F4 -> next error
+"
 set encoding=utf-8
 set langmenu=en_US.UTF-8
 :let $LANG = 'en'
@@ -73,15 +78,18 @@ let g:airline#extensions#tabline#enabled = 1 " Enable the list of buffers
 let g:airline#extensions#tabline#fnamemod = ':t' " Show just the filename
 let g:airline#extensions#tabline#switch_buffers_and_tabs = 1
 let g:airline#extensions#tabline#buffer_idx_mode = 1
+let g:airline_powerline_fonts = 1
 
 " ---- Vim-Gitgutter ----
 if executable('git')
-	let g:gitgutter_highlight_lines = 1  " Turn on gitgutter highlighting
+  let g:gitgutter_max_signs = 200
 else
-    let g:gitgutter_git_executable = 'vimrun'
-    let g:gitgutter_enabled = 0
+  let g:gitgutter_git_executable = 'vimrun'
+  let g:gitgutter_enabled = 0
 endif
 
 " ---- FZF ----
 nnoremap <C-p> :Files<Cr>
+
+" ---- YouCompleteMe ----
 

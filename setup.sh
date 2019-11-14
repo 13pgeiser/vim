@@ -95,6 +95,9 @@ case "$OSTYPE" in
                 sudo apt-get update && sudo apt-get -y install vim-nox
             fi
         fi
+        if ! dpkg-query -l fonts-powerline 2>/dev/null 1>/dev/null; then
+          sudo apt-get install fonts-powerline
+        fi
         ;;
     *)
         fatal "Unsupported OS: $OSTYPE"
@@ -134,10 +137,10 @@ install_plugin https://github.com/tpope/vim-surround.git
 
 install_plugin https://github.com/Valloric/YouCompleteMe.git
 if [[ ! -e $PLUGIN/.installed ]]; then
+    cd $PLUGIN
     case "$OSTYPE" in
         "msys")
             PYTHON=/c/Python37
-            cd $PLUGIN
             sed -i 's/cmake_args.extend( \[/#cmake_args.extend( \[/' third_party/ycmd/build.py
             egrep HAVE_SNPRINTF third_party/ycmd/cpp/ycm/ClangCompleter/ClangHelpers.cpp ||sed -i 's/#include "ClangHelpers.h"/#define HAVE_SNPRINTF\n#include "ClangHelpers.h"/' third_party/ycmd/cpp/ycm/ClangCompleter/ClangHelpers.cpp
             download_unpack https://www.7-zip.org/a/7za920.zip 2fac454a90ae96021f4ffc607d4c00f8
@@ -156,14 +159,8 @@ if [[ ! -e $PLUGIN/.installed ]]; then
             ;;
         linux-*)
             sudo apt-get update
-            sudo apt-get install -y build-essential python3-dev libclang-dev
-            if hash cmake 2>/dev/null; then
-                echo "cmake already installed"
-            else
-                sudo apt-get install -y cmake
-            fi
-            cd $VIM_FOLDER/bundle/YouCompleteMe/
-            python3 ./install.py --system-libclang --clang-completer
+            sudo apt-get install -y build-essential python3-dev libclang-dev cmake golang rustc cargo
+            python3 ./install.py --clang-completer --rust-completer --java-completer
             touch $PLUGIN/.installed
             ;;
         *)
