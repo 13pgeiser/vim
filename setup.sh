@@ -84,19 +84,21 @@ case "$OSTYPE" in
         fi
         ;;
     linux*)
-        if [ -v DISPLAY ]; then
-            if ! dpkg-query -l vim-gtk3 2>/dev/null 1>/dev/null; then
-                echo "Installing vim-gtk3"
-                sudo apt-get update && sudo apt-get -y install vim-gtk3
-            fi
-        else
-            if ! dpkg-query -l vim-nox 2>/dev/null 1>/dev/null; then
-                echo "Installing vim-nox"
-                sudo apt-get update && sudo apt-get -y install vim-nox
-            fi
-        fi
-        if ! dpkg-query -l fonts-powerline 2>/dev/null 1>/dev/null; then
-          sudo apt-get install fonts-powerline
+        if [ `which sudo` ]; then
+          if [ -v DISPLAY ]; then
+              if ! dpkg-query -l vim-gtk3 2>/dev/null 1>/dev/null; then
+                  echo "Installing vim-gtk3"
+                  sudo apt-get update && sudo apt-get -y install vim-gtk3
+              fi
+          else
+              if ! dpkg-query -l vim-nox 2>/dev/null 1>/dev/null; then
+                  echo "Installing vim-nox"
+                  sudo apt-get update && sudo apt-get -y install vim-nox
+              fi
+          fi
+          if ! dpkg-query -l fonts-powerline 2>/dev/null 1>/dev/null; then
+            sudo apt-get install fonts-powerline
+          fi
         fi
         ;;
     *)
@@ -158,8 +160,10 @@ if [[ ! -e $PLUGIN/.installed ]]; then
             touch $PLUGIN/.installed
             ;;
         linux-*)
-            sudo apt-get update
-            sudo apt-get install -y build-essential python3-dev libclang-dev cmake golang rustc cargo
+            if [ `which sudo` ]; then
+              sudo apt-get update
+              sudo apt-get install -y build-essential python3-dev libclang-dev cmake golang rustc cargo
+            fi
             python3 ./install.py --clang-completer --rust-completer --java-completer
             touch $PLUGIN/.installed
             ;;
