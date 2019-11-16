@@ -41,8 +41,13 @@ set colorcolumn=120
 syntax on
 set showmatch
 set modeline
+filetype plugin on
 au FileType python setlocal tabstop=8 expandtab shiftwidth=4 softtabstop=4
 au FileType text setlocal tw=140
+
+" ---- Finding files ----
+set path+=**
+set wildmenu
 
 " ---- Disable directional keys ----
 map <up> <nop>
