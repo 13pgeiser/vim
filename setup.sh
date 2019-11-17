@@ -155,7 +155,7 @@ if [[ ! -e $PLUGIN/.installed ]]; then
             download_unpack https://github.com/ninja-build/ninja/releases/download/v1.9.0/ninja-win.zip 14764496d99bb5ea99e761dab9a38bc4
             PATH=`pwd`/$FOLDER:$PATH
             $PYTHON/python.exe install.py --ninja --clang-completer
-            cp $PYTHON/python37.dll $VIM_FOLDER
+            cp $PYTHON/*.dll $VIM_FOLDER
             cp ./third_party/ycmd/third_party/clang/lib/libclang.dll ./third_party/ycmd/
             touch $PLUGIN/.installed
             ;;
