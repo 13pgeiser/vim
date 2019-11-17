@@ -105,5 +105,8 @@ let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
 nnoremap <F5> :YcmDiags<CR>
 nnoremap <F6> :YcmCompleter GoTo<CR>
-nnoremap <F7> :FixIt<CR>
+
+" ---- Make! ----
+nnoremap <F7> :make<CR>
+set makeprg=make
 
