@@ -17,6 +17,11 @@ function fatal
     exit 1
 }
 
+# Force an update of apt lists on Travis CI
+if [ "$USER" == "travis" ]; then
+  sudo apt-get update
+fi
+
 # install_packages "<package>" ["<package>" ...]
 # Install Debian packages using sudo
 function install_packages
