@@ -1,3 +1,5 @@
 autoload
 bundle
 vim81
+*.zip
+*.tgz
