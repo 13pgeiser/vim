@@ -5,7 +5,7 @@
 " F4 -> next error
 " F5 -> YCM Force compile and diagnostics
 " F6 -> YCM Goto
-" F7 -> YCM FixIt
+" F7 -> Call make
 "
 set encoding=utf-8
 set langmenu=en_US.UTF-8
@@ -98,6 +98,7 @@ endif
 
 " ---- FZF ----
 nnoremap <C-p> :Files<Cr>
+nnoremap <C-S-r> :Files<Cr>
 
 " ---- YouCompleteMe ----
 let g:ycm_echo_current_diagnostic = 1
