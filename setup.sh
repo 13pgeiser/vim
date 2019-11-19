@@ -86,6 +86,7 @@ if [[ ! -e $PLUGIN/.installed ]]; then
       install_cmake
       $PYTHON/python.exe install.py --ninja --clang-completer
       cp $PYTHON/*.dll $VIM_FOLDER
+      cp $(dirname `which gcc`)/*.dll $VIM_FOLDER
       cp ./third_party/ycmd/third_party/clang/lib/libclang.dll ./third_party/ycmd/
       touch $PLUGIN/.installed
       ;;
