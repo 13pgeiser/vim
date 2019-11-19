@@ -11,10 +11,10 @@ echo
 # End of story...
 function fatal
 {
-    echo "FAILED!!!"
-    echo "$1"
-    echo "**********************************************"
-    exit 1
+  echo "FAILED!!!"
+  echo "$1"
+  echo "**********************************************"
+  exit 1
 }
 
 # Force an update of apt lists on Travis CI
@@ -157,6 +157,7 @@ function install_qp_qm
     msys)
       install_innounp
       local url="https://github.com/QuantumLeaps/qp-bundle/releases/download/v6.6.0/qp-windows_6.6.0.exe"
+      local url="https://gitlab.com/pgeiser/qp_bundle/raw/master/qp-windows_6.6.0.exe"
       local archive="$(basename $url)"
       local folder="${archive%.*}"
       download 85acfe6a1412a5256001d9d97e16f17d $url
@@ -170,7 +171,7 @@ function install_qp_qm
       fi
       QPC_BUNDLE="$TOOLS_FOLDER/$folder"
       ;;
-   linux*)
+    linux*)
       download_unpack 04874ed79f6cce43354771ba6090c728 https://github.com/QuantumLeaps/qp-bundle/releases/download/v6.6.0/qp-linux_6.6.0.zip c
       QPC_BUNDLE="$result/qp"
       chmod +x $QPC_BUNDLE/qm/bin/qm
