@@ -1,5 +1,36 @@
 #!/bin/bash
 set -e
+
+echo ""
+echo "                      .,"
+echo "    .,ggggggggggggggg,t 7,  ,ygggggggggggggg,"
+echo "    m                m    7Jb               Jr"
+echo "    m               .m     .p               Jr"
+echo "     TMr          .PR       .PR           .M<"
+echo "      Jr          .p      .,R           .2<"
+echo "      Jr          _p    _,R           _Jt"
+echo "      Jr          .p  .,F           .J5"
+echo "      Jr          _p_,F           .,R Ju"
+echo "     ,Gr          _mF            ,F     Ju"
+echo "   _f Jr          _            ,F         J&"
+echo " _f   Jr                     ,F             Jp"
+echo "  %;. Jr                 J*^7P            .y="
+echo "    %;4r                ,p__J           .g="
+echo "      Gr               gMegg.gggg,_,ggggmggg,"
+echo "      Jr             _M;  _PJp    ^    /    Jr"
+echo "      Jr           _M<,t  J ,<  Jem   ;Hm  _P"
+echo "      Jr         _2< _P  ,t_P  ,bqb  J~_b  J"
+echo "      Jr       _g<   J  _m_g  _mPy  _m_p  _m"
+echo "      Jr     .J*%;. ,m,,,a,m,,,m,m,,,pJg,,,p"
+echo "      .%Qggggt    %;.     .gF"
+echo "                   .%;. .gF"
+echo "                     .%yF"
+echo ""
+echo "**********************************************"
+echo "*        Welcome to Vim installer            *"
+echo "**********************************************"
+echo ""
+
 source _bash_helpers.sh
 
 # Folder where this script lives in.
@@ -19,6 +50,7 @@ case "$OSTYPE" in
 esac
 
 # Download and unpack Vim
+echo "Installing VIM..."
 case "$OSTYPE" in
   "msys")
     if [ ! -d "$VIM_FOLDER" ]; then
@@ -57,6 +89,7 @@ function install_plugin
   fi
   mkdir -p $VIM_FOLDER/bundle
   PLUGIN=$VIM_FOLDER/bundle/$directory
+  echo "Installing $(basename $1)"
   if [[ ! -e $PLUGIN ]]; then
     git clone $1 $PLUGIN --depth 1 --recurse-submodules
     rm -rf $PLUGIN/.git
@@ -145,3 +178,6 @@ if [[ ! -e $VIM_FOLDER/ag ]]; then
       ;;
   esac
 fi
+
+echo "Done!"
+
