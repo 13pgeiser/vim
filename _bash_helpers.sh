@@ -7,6 +7,8 @@ echo "HOSTTYPE: $HOSTTYPE"
 echo "**********************************************"
 echo
 
+ORIGINAL_PATH="$PATH"
+
 # fatal "<error message>"
 # End of story...
 function fatal
@@ -75,6 +77,11 @@ function download_unpack
   local archive="$(basename $2)"
   local folder="${archive%.*}"
   local extension="${archive##*.}"
+  local extension_bis="${folder##*.}"
+  if [ "$extension_bis" == "tar" ]; then
+    local folder="${folder%.*}"
+    local extension="$extension_bis.$extension"
+  fi
   if [ -z "`echo $3 | grep c`" ]; then
     local dst_folder="$TOOLS_FOLDER"
   else
@@ -95,6 +102,10 @@ function download_unpack
         ;;
       "tgz")
         tar -C "$dst_folder" -xzf "$TOOLS_FOLDER/$archive"
+        ;;
+      "tar.xz")
+        mkdir -p "$dst_folder"
+        tar -C "$dst_folder" -xJf "$TOOLS_FOLDER/$archive"
         ;;
       *)
         fatal "Unsupported file extension: $extension"
@@ -205,6 +216,9 @@ function install_buildessentials
     msys)
       download_unpack 55c00ca779471df6faf1c9320e49b5a9 https://netix.dl.sourceforge.net/project/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/8.1.0/threads-posix/seh/x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z c
       PATH="$PATH:$result/mingw64/bin"
+      download_unpack a5abcf7d9cac9d3680b819613819f3c6 http://downloads.sourceforge.net/project/msys2/REPOS/MSYS2/x86_64/make-4.2.1-1-x86_64.pkg.tar.xz cp
+      MAKE_PATH="$result/usr/bin"
+      PATH="$PATH:$MAKE_PATH"
       ;;
     linux*)
       install_packages build-essential
@@ -243,7 +257,8 @@ function call_cmake
   install_cmake
   case "$OSTYPE" in
     msys)
-      cmake -G Ninja .
+      #cmake -G Ninja .
+      cmake -G "MSYS Makefiles" .
       ;;
     linux*)
       cmake .
