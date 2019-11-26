@@ -64,17 +64,21 @@ function download
       fatal "Invalid md5sum for $archive: `md5sum TOOLS_FOLDER/${archive}.tmp`"
     fi
     mv $TOOLS_FOLDER/${archive}.tmp $TOOLS_FOLDER/$archive
-  fi
-}
+    fi
+  }
 
-# download_unpack "<md5sum hash>" "<url>" ["<flags>", "extension"]
+# download_unpack "<md5sum hash>" "<url>" ["<flags>", "archive"]
 # flags: 'c' -> create_folder
 # flags: 'p' -> add folder to PATH
 # flags: 'd' -> echo destination folder
 function download_unpack
 {
   download "$1" "$2"
-  local archive="$(basename $2)"
+  if [ -z $4 ]; then
+    local archive="$(basename $2)"
+  else
+    local archive="$4"
+  fi
   local folder="${archive%.*}"
   local extension="${archive##*.}"
   local extension_bis="${folder##*.}"
@@ -87,9 +91,6 @@ function download_unpack
   else
     local dst_folder="$TOOLS_FOLDER/$folder"
   fi
-  if [ ! -z "$4" ]; then
-    local extension="$4"
-  fi
   if [ ! -d $TOOLS_FOLDER/$folder ]; then
     echo "Unpacking $archive"
     case "$extension" in
@@ -101,11 +102,16 @@ function download_unpack
         7z x -o"$dst_folder" "$TOOLS_FOLDER/$archive"
         ;;
       "tgz")
+        mkdir -p $dst_folder
         tar -C "$dst_folder" -xzf "$TOOLS_FOLDER/$archive"
         ;;
       "tar.xz")
-        mkdir -p "$dst_folder"
+        mkdir -p $dst_folder
         tar -C "$dst_folder" -xJf "$TOOLS_FOLDER/$archive"
+        ;;
+      "tar.bz2")
+        mkdir -p $dst_folder
+        tar -C "$dst_folder" -xjf "$TOOLS_FOLDER/$archive"
         ;;
       *)
         fatal "Unsupported file extension: $extension"
@@ -230,6 +236,25 @@ function install_buildessentials
 
 }
 
+# Install gcc for arm
+function install_gcc_for_arm
+{
+  case "$OSTYPE" in
+    msys)
+      download_unpack 82525522fefbde0b7811263ee8172b10 https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2019q4/RC2.1/gcc-arm-none-eabi-9-2019-q4-major-win32.zip.bz2 c gcc-arm-none-eabi-9-2019-q4-major-win32.zip
+      PATH="$PATH:$result//bin"
+      ;;
+    linux*)
+      download_unpack fe0029de4f4ec43cf7008944e34ff8cc https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2019q4/RC2.1/gcc-arm-none-eabi-9-2019-q4-major-x86_64-linux.tar.bz2 c
+      PATH="$PATH:$result/gcc-arm-none-eabi-9-2019-q4-major/bin"
+      ;;
+    *)
+      fatal "Unsupported OS: $OSTYPE"
+      ;;
+  esac
+
+}
+
 # install_cmake
 function install_cmake
 {
@@ -257,11 +282,10 @@ function call_cmake
   install_cmake
   case "$OSTYPE" in
     msys)
-      #cmake -G Ninja .
-      cmake -G "MSYS Makefiles" .
+      cmake -G "MSYS Makefiles" . $@
       ;;
     linux*)
-      cmake .
+      cmake . $@
       ;;
     *)
       fatal "Unsupported OS: $OSTYPE"
