@@ -68,8 +68,8 @@ function download
       fatal "Invalid md5sum for $archive: `md5sum TOOLS_FOLDER/${archive}.tmp`"
     fi
     mv $TOOLS_FOLDER/${archive}.tmp $TOOLS_FOLDER/$archive
-    fi
-  }
+  fi
+}
 
 # download_unpack "<md5sum hash>" "<url>" ["<flags>", "archive"]
 # flags: 'c' -> create_folder
@@ -256,7 +256,22 @@ function install_gcc_for_arm
       fatal "Unsupported OS: $OSTYPE"
       ;;
   esac
-
+  cat <<EOF >arm-none-eabi.cmake
+# Automatically created by the configure script
+# DO NOT EDIT MANUALLY!
+set(CMAKE_SYSTEM_NAME Generic)
+set(CMAKE_SYSTEM_PROCESSOR arm)
+set(CMAKE_C_COMPILER arm-none-eabi-gcc)
+set(CMAKE_CXX_COMPILER arm-none-eabi-g++)
+set(CMAKE_ASM_COMPILER arm-none-eabi-gcc)
+set(CMAKE_OBJCOPY arm-none-eabi-objcopy)
+set(CMAKE_OBJDUMP arm-none-eabi-objdump)
+set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
+EOF
 }
 
 # install_cmake
@@ -297,20 +312,20 @@ function call_cmake
 
 function write_sourceme
 {
-	cat <<EOF >sourceme
+  cat <<EOF >sourceme
 #!/bin/bash
 export LANG=C
 alias tags="ctags -R --c++-kinds=+p --fields=+iaS --extra=+q ."
 alias ls='ls -F --color --show-control-chars'
 export LC_MESSAGES=C
 function g() {
-	gitk --all &
+  gitk --all &
 }
 
 gg() {
-	gitk --all &
+  gitk --all &
     git gui &
-}
+  }
 EOF
-	echo "PATH=\"$PATH\"" >>sourceme
+echo "PATH=\"$PATH\"" >>sourceme
 }
