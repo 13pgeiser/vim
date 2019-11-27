@@ -50,11 +50,15 @@ function detect_tools_folder
   mkdir -p "$TOOLS_FOLDER"
 }
 
-# download "<md5sum hash>" "<url>"
+# download "<md5sum hash>" "<url>" ["<archive>"]
 # Download url and verify downloaded file.
 function download
 {
-  local archive=$(basename $2)
+  if [ -z $3 ]; then
+    local archive="$(basename $2)"
+  else
+    local archive="$3"
+  fi
   if [ ! -e $TOOLS_FOLDER/$archive ]; then
     echo "Downloading $archive"
     echo "$cmd"
@@ -73,12 +77,12 @@ function download
 # flags: 'd' -> echo destination folder
 function download_unpack
 {
-  download "$1" "$2"
   if [ -z $4 ]; then
     local archive="$(basename $2)"
   else
     local archive="$4"
   fi
+  download "$1" "$2" "$archive"
   local folder="${archive%.*}"
   local extension="${archive##*.}"
   local extension_bis="${folder##*.}"
@@ -263,7 +267,6 @@ function install_cmake
     msys)
       install_ninja
       download_unpack f97acefa282588f05c6528d6db37c570 https://github.com/Kitware/CMake/releases/download/v3.15.5/cmake-3.15.5-win64-x64.zip
-      echo PATH="$PATH:$result/bin"
       PATH="$PATH:$result/bin"
       ;;
     linux*)
