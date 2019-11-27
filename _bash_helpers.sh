@@ -262,7 +262,6 @@ function install_gcc_for_arm
 # install_cmake
 function install_cmake
 {
-  install_buildessentials
   case "$OSTYPE" in
     msys)
       install_ninja
@@ -296,3 +295,22 @@ function call_cmake
   esac
 }
 
+function write_sourceme
+{
+	cat <<EOF >sourceme
+#!/bin/bash
+export LANG=C
+alias tags="ctags -R --c++-kinds=+p --fields=+iaS --extra=+q ."
+alias ls='ls -F --color --show-control-chars'
+export LC_MESSAGES=C
+function g() {
+	gitk --all &
+}
+
+gg() {
+	gitk --all &
+    git gui &
+}
+EOF
+	echo "PATH=\"$PATH\"" >>sourceme
+}
