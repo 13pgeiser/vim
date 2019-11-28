@@ -123,7 +123,6 @@ function download_unpack
     esac
   fi
   if [ ! -z "`echo $3 | grep p`" ]; then
-    echo "Updating path with $dst_folder"
     PATH="$PATH:$dst_folder"
   fi
   result="$TOOLS_FOLDER/$folder"
