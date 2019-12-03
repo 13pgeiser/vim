@@ -71,7 +71,7 @@ function download
   fi
 }
 
-# download_unpack "<md5sum hash>" "<url>" ["<flags>", "archive"]
+# download_unpack "<md5sum hash>" "<url>" ["<flags>", "archive", "folder"]
 # flags: 'c' -> create_folder
 # flags: 'p' -> add folder to PATH
 # flags: 'd' -> echo destination folder
@@ -83,9 +83,14 @@ function download_unpack
     local archive="$4"
   fi
   download "$1" "$2" "$archive"
-  local folder="${archive%.*}"
+  if [ -z $5 ]; then
+    local folder="${archive%.*}"
+  else
+    local folder="$5"
+  fi
   local extension="${archive##*.}"
-  local extension_bis="${folder##*.}"
+  local base_name="${archive%.*}"
+  local extension_bis="${base_name##*.}"
   if [ "$extension_bis" == "tar" ]; then
     local folder="${folder%.*}"
     local extension="$extension_bis.$extension"
@@ -95,7 +100,8 @@ function download_unpack
   else
     local dst_folder="$TOOLS_FOLDER/$folder"
   fi
-  if [ ! -d $TOOLS_FOLDER/$folder ]; then
+  echo "### $TOOLS_FOLDER/$folder/.$archive ###"
+  if [ ! -e $TOOLS_FOLDER/$folder/.$archive ]; then
     echo "Unpacking $archive"
     case "$extension" in
       "zip")
@@ -121,6 +127,8 @@ function download_unpack
         fatal "Unsupported file extension: $extension"
         ;;
     esac
+    echo "touch $TOOLS_FOLDER/$folder/.$archive"
+    touch "$TOOLS_FOLDER/$folder/.$archive"
   fi
   if [ ! -z "`echo $3 | grep p`" ]; then
     PATH="$PATH:$dst_folder"
@@ -223,9 +231,9 @@ function install_buildessentials
 {
   case "$OSTYPE" in
     msys)
-      download_unpack 55c00ca779471df6faf1c9320e49b5a9 https://netix.dl.sourceforge.net/project/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/8.1.0/threads-posix/seh/x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z c
+      download_unpack 55c00ca779471df6faf1c9320e49b5a9 http://downloads.sourceforge.net/project/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/8.1.0/threads-posix/seh/x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z c
       PATH="$PATH:$result/mingw64/bin"
-      download_unpack a5abcf7d9cac9d3680b819613819f3c6 http://downloads.sourceforge.net/project/msys2/REPOS/MSYS2/x86_64/make-4.2.1-1-x86_64.pkg.tar.xz cp
+      download_unpack a5abcf7d9cac9d3680b819613819f3c6 http://repo.msys2.org/msys/x86_64/make-4.2.1-1-x86_64.pkg.tar.xz cp
       MAKE_PATH="$result/usr/bin"
       PATH="$PATH:$MAKE_PATH"
       ;;
@@ -284,6 +292,22 @@ function install_cmake
       ;;
     linux*)
       install_packages cmake
+      ;;
+    *)
+      fatal "Unsupported OS: $OSTYPE"
+      ;;
+  esac
+}
+
+function install_subversion
+{
+  case "$OSTYPE" in
+    msys)
+      download_unpack 757a8abc7bcf363f57c7aea34bcd3a36 https://www.visualsvn.com/files/Apache-Subversion-1.13.0.zip c
+      PATH="$PATH:$result/bin"
+      ;;
+    linux*)
+      install_packages subversion
       ;;
     *)
       fatal "Unsupported OS: $OSTYPE"
