@@ -100,7 +100,7 @@ function download_unpack
   else
     local dst_folder="$TOOLS_FOLDER/$folder"
   fi
-  if [ ! -e $TOOLS_FOLDER/$folder/.$archive ]; then
+  if [ ! -e $dst_folder/.$archive ]; then
     echo "Unpacking $archive"
     case "$extension" in
       "zip")
@@ -126,8 +126,7 @@ function download_unpack
         fatal "Unsupported file extension: $extension"
         ;;
     esac
-	echo "touch $TOOLS_FOLDER/$folder/.$archive"
-	touch "$TOOLS_FOLDER/$folder/.$archive"
+	touch "$dst_folder/.$archive"
   fi
   if [ ! -z "`echo $3 | grep p`" ]; then
     PATH="$PATH:$dst_folder"
