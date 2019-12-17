@@ -28,7 +28,7 @@ fi
 # Install Debian packages using sudo
 function install_packages
 {
-  for package in "$1"; do
+  for package in "$@"; do
     if ! dpkg-query -f '${Status}' -s $package | grep 'install ok' 2>/dev/null 1>/dev/null; then
       echo "Installing $package"
       sudo apt-get -y install $package

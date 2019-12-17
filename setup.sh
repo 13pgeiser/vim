@@ -126,7 +126,20 @@ if [[ ! -e $PLUGIN/.installed ]]; then
     linux-*)
       install_packages build-essential python3-dev libclang-dev cmake golang rustc cargo
       install_cmake
-      python3 ./install.py --clang-completer --rust-completer --java-completer
+      case "$OSTYPE" in
+        "msys")
+          python3 ./install.py --clang-completer --rust-completer --java-completer
+          ;;
+        "linux-gnu")
+          python3 ./install.py --clang-completer --rust-completer --java-completer
+          ;;
+        "linux-gnueabihf")
+          python3 ./install.py --clang-completer --java-completer
+          ;;
+        *)
+          fatal "Unsupported OS: $OSTYPE"
+          ;;
+      esac
       touch $PLUGIN/.installed
       ;;
     *)
