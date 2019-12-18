@@ -29,9 +29,9 @@ fi
 function install_packages
 {
   for package in "$@"; do
-    if ! dpkg-query -f '${Status}' -s $package | grep 'install ok' 2>/dev/null 1>/dev/null; then
+    if ! dpkg-query -f '${Status}' -s "$package" | grep 'install ok' 2>/dev/null 1>/dev/null; then
       echo "Installing $package"
-      sudo apt-get -y install $package
+      sudo apt-get -y install "$package"
     fi
   done
 }
@@ -54,20 +54,21 @@ function detect_tools_folder
 # Download url and verify downloaded file.
 function download
 {
-  if [ -z $3 ]; then
-    local archive="$(basename $2)"
+  local archive
+  if [ -z "$3" ]; then
+    archive="$(basename "$2")"
   else
-    local archive="$3"
+    archive="$3"
   fi
-  if [ ! -e $TOOLS_FOLDER/$archive ]; then
+  if [ ! -e "$TOOLS_FOLDER/$archive" ]; then
     echo "Downloading $archive"
     echo "$cmd"
-    cmd="curl -kSL "$2" --progress-bar -o $TOOLS_FOLDER/${archive}.tmp"
+    cmd="curl -kSL $2 --progress-bar -o $TOOLS_FOLDER/${archive}.tmp"
     $cmd
-    if [[ "`md5sum $TOOLS_FOLDER/${archive}.tmp | cut -d' ' -f1`" != "$1" ]]; then
-      fatal "Invalid md5sum for $archive: `md5sum TOOLS_FOLDER/${archive}.tmp`"
+    if [[ "$(md5sum "$TOOLS_FOLDER/${archive}.tmp" | cut -d' ' -f1)" != "$1" ]]; then
+      fatal "Invalid md5sum for $archive: $(md5sum "TOOLS_FOLDER/${archive}.tmp")"
     fi
-    mv $TOOLS_FOLDER/${archive}.tmp $TOOLS_FOLDER/$archive
+    mv "$TOOLS_FOLDER/${archive}.tmp" "$TOOLS_FOLDER/$archive"
   fi
 }
 
@@ -77,13 +78,14 @@ function download
 # flags: 'd' -> echo destination folder
 function download_unpack
 {
-  if [ -z $4 ]; then
-    local archive="$(basename $2)"
+  local archive
+  if [ -z "$4" ]; then
+    archive="$(basename "$2")"
   else
-    local archive="$4"
+    archive="$4"
   fi
   download "$1" "$2" "$archive"
-  if [ -z $5 ]; then
+  if [ -z "$5" ]; then
 	local folder="${archive%.*}"
   else
     local folder="$5"
@@ -95,12 +97,12 @@ function download_unpack
     local folder="${folder%.*}"
     local extension="$extension_bis.$extension"
   fi
-  if [ -z "`echo $3 | grep c`" ]; then
+  if [ -z "$(echo $3 | grep c)" ]; then
     local dst_folder="$TOOLS_FOLDER"
   else
     local dst_folder="$TOOLS_FOLDER/$folder"
   fi
-  if [ ! -e $dst_folder/.$archive ]; then
+  if [ ! -e "$dst_folder/.$archive" ]; then
     echo "Unpacking $archive"
     case "$extension" in
       "zip")
@@ -111,15 +113,15 @@ function download_unpack
         7z x -o"$dst_folder" "$TOOLS_FOLDER/$archive"
         ;;
       "tgz")
-        mkdir -p $dst_folder
+        mkdir -p "$dst_folder"
         tar -C "$dst_folder" -xzf "$TOOLS_FOLDER/$archive"
         ;;
       "tar.xz")
-        mkdir -p $dst_folder
+        mkdir -p "$dst_folder"
         tar -C "$dst_folder" -xJf "$TOOLS_FOLDER/$archive"
         ;;
       "tar.bz2")
-        mkdir -p $dst_folder
+        mkdir -p "$dst_folder"
         tar -C "$dst_folder" -xjf "$TOOLS_FOLDER/$archive"
         ;;
       *)
@@ -128,7 +130,7 @@ function download_unpack
     esac
 	touch "$dst_folder/.$archive"
   fi
-  if [ ! -z "`echo $3 | grep p`" ]; then
+  if [ ! -z "$(echo "$3" | grep p)" ]; then
     PATH="$PATH:$dst_folder"
   fi
   result="$TOOLS_FOLDER/$folder"
@@ -142,12 +144,13 @@ function install_7zip
   case "$OSTYPE" in
     msys)
       download_unpack 2fac454a90ae96021f4ffc607d4c00f8 https://www.7-zip.org/a/7za920.zip cp
-      local url="https://www.7-zip.org/a/7z1902-x64.exe" c
-      local archive="$(basename $url)"
+      local url="https://www.7-zip.org/a/7z1902-x64.exe"
+      local archive
+      archive="$(basename $url)"
       local folder="${archive%.*}"
       download 6fe79bec6bf751293a1271bd739c8eb0 $url
       if [ ! -d "$TOOLS_FOLDER/$folder" ]; then
-        7za x -o$TOOLS_FOLDER/$folder $TOOLS_FOLDER/$archive
+        7za x "-o$TOOLS_FOLDER/$folder" "$TOOLS_FOLDER/$archive"
       fi
       PATH="$PATH:$TOOLS_FOLDER/$folder"
       ;;
@@ -184,12 +187,13 @@ function install_qp_qm
       install_innounp
       local url="https://github.com/QuantumLeaps/qp-bundle/releases/download/v6.6.0/qp-windows_6.6.0.exe"
       local url="https://gitlab.com/pgeiser/qp_bundle/raw/master/qp-windows_6.6.0.exe"
-      local archive="$(basename $url)"
+      local archive
+      archive="$(basename $url)"
       local folder="${archive%.*}"
       download 85acfe6a1412a5256001d9d97e16f17d $url
       if [ ! -d "$TOOLS_FOLDER/$folder" ]; then
         innounp -q -x -d"$TOOLS_FOLDER/$folder" "$TOOLS_FOLDER/$archive"
-        for file in `ls "$TOOLS_FOLDER/$folder/{app}"`
+        for file in "$TOOLS_FOLDER"/"$folder"/{app}/*
         do
           mv "$TOOLS_FOLDER/$folder/{app}/$file" "$TOOLS_FOLDER/$folder"
         done
@@ -200,7 +204,7 @@ function install_qp_qm
     linux*)
       download_unpack 04874ed79f6cce43354771ba6090c728 https://github.com/QuantumLeaps/qp-bundle/releases/download/v6.6.0/qp-linux_6.6.0.zip c
       QPC_BUNDLE="$result/qp"
-      chmod +x $QPC_BUNDLE/qm/bin/qm
+      chmod +x "$QPC_BUNDLE/qm/bin/qm"
       ;;
     *)
       fatal "Unsupported OS: $OSTYPE"
@@ -320,10 +324,10 @@ function call_cmake
   install_cmake
   case "$OSTYPE" in
     msys)
-      cmake -G "MSYS Makefiles" . $@
+      cmake -G "MSYS Makefiles" . "$@"
       ;;
     linux*)
-      cmake . $@
+      cmake . "$@"
       ;;
     *)
       fatal "Unsupported OS: $OSTYPE"

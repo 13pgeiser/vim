@@ -56,7 +56,7 @@ case "$OSTYPE" in
     if [ ! -d "$VIM_FOLDER" ]; then
       VERSION=8.1.2291
       download_unpack 063a6099f7900b166899c645097e6da2 https://github.com/vim/vim-win32-installer/releases/download/v${VERSION}/gvim_${VERSION}_x64_signed.zip
-      mv vim/vim81 $VIM_FOLDER
+      mv vim/vim81 "$VIM_FOLDER"
       rm -rf vim
     fi
     ;;
@@ -73,10 +73,10 @@ case "$OSTYPE" in
     ;;
 esac
 
-if [ ! -e $VIM_FOLDER/autoload/pathogen.vim ]; then
+if [ ! -e "$VIM_FOLDER/autoload/pathogen.vim" ]; then
   download eb4e4f0c8ca51ae15263c9255dfd6094 https://tpo.pe/pathogen.vim
-  mkdir -p $VIM_FOLDER/autoload
-  mv pathogen.vim $VIM_FOLDER/autoload
+  mkdir -p "$VIM_FOLDER/autoload"
+  mv pathogen.vim "$VIM_FOLDER/autoload"
 fi
 
 function install_plugin
@@ -84,15 +84,15 @@ function install_plugin
   if [[ "$2" != "" ]]; then
     directory="$2"
   else
-    directory=`basename $1`
+    directory=$(basename "$1")
     directory="${directory%.*}"
   fi
-  mkdir -p $VIM_FOLDER/bundle
+  mkdir -p "$VIM_FOLDER/bundle"
   PLUGIN=$VIM_FOLDER/bundle/$directory
-  echo "Installing $(basename $1)"
+  echo "Installing $(basename "$1")"
   if [[ ! -e $PLUGIN ]]; then
-    git clone $1 $PLUGIN --depth 1 --recurse-submodules
-    rm -rf $PLUGIN/.git
+    git clone "$1" "$PLUGIN" --depth 1 --recurse-submodules
+    rm -rf "$PLUGIN/.git"
   fi
 }
 
@@ -108,20 +108,20 @@ install_plugin https://github.com/tpope/vim-surround.git
 
 TOOLS_FOLDER="$VIM_FOLDER"
 install_plugin https://github.com/Valloric/YouCompleteMe.git
-if [[ ! -e $PLUGIN/.installed ]]; then
-  cd $PLUGIN
+if [[ ! -e "$PLUGIN/.installed" ]]; then
+  cd "$PLUGIN"
   case "$OSTYPE" in
     "msys")
       PYTHON=/c/Python37
       sed -i 's/cmake_args.extend( \[/#cmake_args.extend( \[/' third_party/ycmd/build.py
-      egrep HAVE_SNPRINTF third_party/ycmd/cpp/ycm/ClangCompleter/ClangHelpers.cpp ||sed -i 's/#include "ClangHelpers.h"/#define HAVE_SNPRINTF\n#include "ClangHelpers.h"/' third_party/ycmd/cpp/ycm/ClangCompleter/ClangHelpers.cpp
+      grep -e HAVE_SNPRINTF third_party/ycmd/cpp/ycm/ClangCompleter/ClangHelpers.cpp ||sed -i 's/#include "ClangHelpers.h"/#define HAVE_SNPRINTF\n#include "ClangHelpers.h"/' third_party/ycmd/cpp/ycm/ClangCompleter/ClangHelpers.cpp
       install_buildessentials
       install_cmake
-      $PYTHON/python.exe install.py --ninja --clang-completer
-      cp $PYTHON/*.dll $VIM_FOLDER
-      cp $(dirname `which gcc`)/*.dll $VIM_FOLDER
+      "$PYTHON/python.exe" install.py --ninja --clang-completer
+      cp "$PYTHON/*.dll" "$VIM_FOLDER"
+      cp "$(dirname "$(command -v gcc)")/*.dll" "$VIM_FOLDER"
       cp ./third_party/ycmd/third_party/clang/lib/libclang.dll ./third_party/ycmd/
-      touch $PLUGIN/.installed
+      touch "$PLUGIN/.installed"
       ;;
     linux-*)
       install_packages build-essential python3-dev libclang-dev cmake golang rustc cargo
@@ -140,7 +140,7 @@ if [[ ! -e $PLUGIN/.installed ]]; then
           fatal "Unsupported OS: $OSTYPE"
           ;;
       esac
-      touch $PLUGIN/.installed
+      touch "$PLUGIN/.installed"
       ;;
     *)
       fatal "YouCompleteMe: Unsupported OS: $OSTYPE"
