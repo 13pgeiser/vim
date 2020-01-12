@@ -1,4 +1,5 @@
 dist: xenial
 language: cpp
 script:
+  - make check
   - bash ./setup.sh

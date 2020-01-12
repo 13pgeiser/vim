@@ -33,7 +33,7 @@ echo ""
 
 # Fetch bash helpers and source it.
 if [ ! -e .bash_helpers.sh ]; then
-  curl -kSL https://raw.githubusercontent.com/13pgeiser/bash/master/bash_helpers.sh -o .bash_helpers.sh
+	curl -kSL https://raw.githubusercontent.com/13pgeiser/bash/master/bash_helpers.sh -o .bash_helpers.sh
 fi
 source ./.bash_helpers.sh
 
@@ -42,62 +42,62 @@ TOOLS_FOLDER=$(dirname "$(readlink -f "$0")")
 
 # VIM_FOLDER
 case "$OSTYPE" in
-  msys)
-    VIM_FOLDER="$TOOLS_FOLDER/vim81"
-    ;;
-  linux*)
-    VIM_FOLDER="$TOOLS_FOLDER"
-    ;;
-  *)
-    fatal "Unsupported OS: $OSTYPE"
-    ;;
+msys)
+	VIM_FOLDER="$TOOLS_FOLDER/vim81"
+	;;
+linux*)
+	VIM_FOLDER="$TOOLS_FOLDER"
+	;;
+*)
+	fatal "Unsupported OS: $OSTYPE"
+	;;
 esac
 
 # Download and unpack Vim
 echo "Installing VIM..."
 case "$OSTYPE" in
-  "msys")
-    if [ ! -d "$VIM_FOLDER" ]; then
-      VERSION=8.1.2291
-      _download_unpack 063a6099f7900b166899c645097e6da2 https://github.com/vim/vim-win32-installer/releases/download/v${VERSION}/gvim_${VERSION}_x64_signed.zip "" "" ""
-      mv vim/vim81 "$VIM_FOLDER"
-      rm -rf vim
-    fi
-    ;;
-  linux*)
-    if [ -v DISPLAY ]; then
-      _install_packages vim-gtk3
-    else
-      _install_packages vim-nox
-    fi
-    _install_packages fonts-powerline
-    ;;
-  *)
-    fatal "Unsupported OS: $OSTYPE"
-    ;;
+"msys")
+	if [ ! -d "$VIM_FOLDER" ]; then
+		VERSION=8.1.2291
+		_download_unpack 063a6099f7900b166899c645097e6da2 https://github.com/vim/vim-win32-installer/releases/download/v${VERSION}/gvim_${VERSION}_x64_signed.zip "" "" ""
+		mv vim/vim81 "$VIM_FOLDER"
+		rm -rf vim
+	fi
+	;;
+linux*)
+	if [ -v DISPLAY ]; then
+		_install_debian_packages vim-gtk3
+	else
+		_install_debian_packages vim-nox
+	fi
+	_install_debian_packages fonts-powerline
+	;;
+*)
+	fatal "Unsupported OS: $OSTYPE"
+	;;
 esac
 
 if [ ! -e "$VIM_FOLDER/autoload/pathogen.vim" ]; then
-  _download eb4e4f0c8ca51ae15263c9255dfd6094 https://tpo.pe/pathogen.vim ""
-  mkdir -p "$VIM_FOLDER/autoload"
-  mv pathogen.vim "$VIM_FOLDER/autoload"
+	_download eb4e4f0c8ca51ae15263c9255dfd6094 https://tpo.pe/pathogen.vim ""
+	mkdir -p "$VIM_FOLDER/autoload"
+	mv pathogen.vim "$VIM_FOLDER/autoload"
 fi
 
 install_plugin() {
-  local directory
-  if [[ "$2" != "" ]]; then
-    directory="$2"
-  else
-    directory=$(basename "$1")
-    directory="${directory%.*}"
-  fi
-  mkdir -p "$VIM_FOLDER/bundle"
-  PLUGIN=$VIM_FOLDER/bundle/$directory
-  echo "Installing $(basename "$1")"
-  if [[ ! -e $PLUGIN ]]; then
-    git clone "$1" "$PLUGIN" --depth 1 --recurse-submodules
-    rm -rf "$PLUGIN/.git"
-  fi
+	local directory
+	if [[ "$2" != "" ]]; then
+		directory="$2"
+	else
+		directory=$(basename "$1")
+		directory="${directory%.*}"
+	fi
+	mkdir -p "$VIM_FOLDER/bundle"
+	PLUGIN=$VIM_FOLDER/bundle/$directory
+	echo "Installing $(basename "$1")"
+	if [[ ! -e $PLUGIN ]]; then
+		git clone "$1" "$PLUGIN" --depth 1 --recurse-submodules
+		rm -rf "$PLUGIN/.git"
+	fi
 }
 
 install_plugin https://github.com/joshdick/onedark.vim.git ""
@@ -113,85 +113,84 @@ install_plugin https://github.com/tpope/vim-surround.git ""
 TOOLS_FOLDER="$VIM_FOLDER"
 install_plugin https://github.com/Valloric/YouCompleteMe.git ""
 if [[ ! -e "$PLUGIN/.installed" ]]; then
-  cd "$PLUGIN"
-  _install_buildessentials
-  _install_cmake
-  case "$OSTYPE" in
-    "msys")
-      PYTHON="/c/Python37"
-      sed -i 's/cmake_args.extend( \[/#cmake_args.extend( \[/' third_party/ycmd/build.py
-      grep -e HAVE_SNPRINTF third_party/ycmd/cpp/ycm/ClangCompleter/ClangHelpers.cpp ||sed -i 's/#include "ClangHelpers.h"/#define HAVE_SNPRINTF\n#include "ClangHelpers.h"/' third_party/ycmd/cpp/ycm/ClangCompleter/ClangHelpers.cpp
-      "$PYTHON/python.exe" install.py --ninja --clang-completer
-      cp "$PYTHON"/*.dll "$VIM_FOLDER"
-      cp "$(dirname "$(command -v gcc)")"/*.dll "$VIM_FOLDER"
-      cp ./third_party/ycmd/third_party/clang/lib/libclang.dll ./third_party/ycmd/
-      touch "$PLUGIN/.installed"
-      ;;
-    linux-*)
-      _install_packages python3-dev libclang-dev golang rustc cargo
-      case "$OSTYPE" in
-        "linux-gnu")
-          python3 ./install.py --clang-completer --rust-completer --java-completer
-          ;;
-        "linux-gnueabihf")
-          python3 ./install.py --clang-completer --java-completer
-          ;;
-        *)
-          fatal "Unsupported OS: $OSTYPE"
-          ;;
-      esac
-      touch "$PLUGIN/.installed"
-      ;;
-    *)
-      fatal "YouCompleteMe: Unsupported OS: $OSTYPE"
-      ;;
-  esac
-  cd "$VIM_FOLDER"
+	cd "$PLUGIN"
+	_install_buildessentials
+	_install_cmake
+	case "$OSTYPE" in
+	"msys")
+		PYTHON="/c/Python37"
+		sed -i 's/cmake_args.extend( \[/#cmake_args.extend( \[/' third_party/ycmd/build.py
+		grep -e HAVE_SNPRINTF third_party/ycmd/cpp/ycm/ClangCompleter/ClangHelpers.cpp || sed -i 's/#include "ClangHelpers.h"/#define HAVE_SNPRINTF\n#include "ClangHelpers.h"/' third_party/ycmd/cpp/ycm/ClangCompleter/ClangHelpers.cpp
+		"$PYTHON/python.exe" install.py --ninja --clang-completer
+		cp "$PYTHON"/*.dll "$VIM_FOLDER"
+		cp "$(dirname "$(command -v gcc)")"/*.dll "$VIM_FOLDER"
+		cp ./third_party/ycmd/third_party/clang/lib/libclang.dll ./third_party/ycmd/
+		touch "$PLUGIN/.installed"
+		;;
+	linux-*)
+		_install_debian_packages python3-dev libclang-dev golang rustc cargo
+		case "$OSTYPE" in
+		"linux-gnu")
+			python3 ./install.py --clang-completer --rust-completer --java-completer
+			;;
+		"linux-gnueabihf")
+			python3 ./install.py --clang-completer --java-completer
+			;;
+		*)
+			fatal "Unsupported OS: $OSTYPE"
+			;;
+		esac
+		touch "$PLUGIN/.installed"
+		;;
+	*)
+		fatal "YouCompleteMe: Unsupported OS: $OSTYPE"
+		;;
+	esac
+	cd "$VIM_FOLDER"
 fi
 TOOLS_FOLDER=$(dirname "$(readlink -f "$0")")
 
 install_plugin https://github.com/junegunn/fzf.git ""
 install_plugin https://github.com/junegunn/fzf.vim.git ""
 if [[ ! -e $VIM_FOLDER/bundle/fzf/bin/fzf2 ]]; then
-  VERSION=0.18.0
-  case "$OSTYPE" in
-    "msys")
-      ARCHIVE=fzf-${VERSION}-windows_amd64.zip
-      MD5=0fe7965138541c0b0ee49f9d11bba9cf
-      ;;
-    "linux-gnu")
-      ARCHIVE=fzf-${VERSION}-linux_amd64.tgz
-      MD5=7a1b249b4004e70121370abb8fe3ecc4
-      ;;
-    "linux-gnueabihf")
-      ARCHIVE=fzf-${VERSION}-linux_arm7.tgz
-      MD5=8e38e5487063622110146245b7f5dcbc
-      ;;
-    *)
-      fatal "FZF: Unsupported OS: $OSTYPE"
-      ;;
-  esac
-  result=$(_download_unpack "$MD5" "https://github.com/junegunn/fzf-bin/releases/download/${VERSION}/$ARCHIVE" "ce" "" "bundle/fzf_archive")
-  cp "$result/fzf" "$VIM_FOLDER/bundle/fzf/bin/"
+	VERSION=0.18.0
+	case "$OSTYPE" in
+	"msys")
+		ARCHIVE=fzf-${VERSION}-windows_amd64.zip
+		MD5=0fe7965138541c0b0ee49f9d11bba9cf
+		;;
+	"linux-gnu")
+		ARCHIVE=fzf-${VERSION}-linux_amd64.tgz
+		MD5=7a1b249b4004e70121370abb8fe3ecc4
+		;;
+	"linux-gnueabihf")
+		ARCHIVE=fzf-${VERSION}-linux_arm7.tgz
+		MD5=8e38e5487063622110146245b7f5dcbc
+		;;
+	*)
+		fatal "FZF: Unsupported OS: $OSTYPE"
+		;;
+	esac
+	result=$(_download_unpack "$MD5" "https://github.com/junegunn/fzf-bin/releases/download/${VERSION}/$ARCHIVE" "ce" "" "bundle/fzf_archive")
+	cp "$result/fzf" "$VIM_FOLDER/bundle/fzf/bin/"
 fi
 
 install_plugin https://github.com/mileszs/ack.vim.git ""
 if [[ ! -e $VIM_FOLDER/ag ]]; then
-  case "$OSTYPE" in
-    "msys")
-      ARCHIVE=ag-2018-08-08_2.2.0-2-gbd82cd3-x64.zip
-      result=$(_download_unpack 0d76cae5d89dd5e6a42603505f155bc3 https://github.com/k-takata/the_silver_searcher-win32/releases/download/2018-08-08%2F2.2.0-2-gbd82cd3//$ARCHIVE "ce" "" "")
-      mv "$result/ag" "$VIM_FOLDER"
-      ;;
-    linux-*)
-      echo "Check for AG"
-      _install_packages silversearcher-ag
-      ;;
-    *)
-      fatal "Ag: Unsupported OS: $OSTYPE"
-      ;;
-  esac
+	case "$OSTYPE" in
+	"msys")
+		ARCHIVE=ag-2018-08-08_2.2.0-2-gbd82cd3-x64.zip
+		result=$(_download_unpack 0d76cae5d89dd5e6a42603505f155bc3 https://github.com/k-takata/the_silver_searcher-win32/releases/download/2018-08-08%2F2.2.0-2-gbd82cd3//$ARCHIVE "ce" "" "")
+		mv "$result/ag" "$VIM_FOLDER"
+		;;
+	linux-*)
+		echo "Check for AG"
+		_install_debian_packages silversearcher-ag
+		;;
+	*)
+		fatal "Ag: Unsupported OS: $OSTYPE"
+		;;
+	esac
 fi
 
 echo "Done!"
-
