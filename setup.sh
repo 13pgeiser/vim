@@ -118,7 +118,11 @@ if [[ ! -e "$PLUGIN/.installed" ]]; then
 	_install_cmake
 	case "$OSTYPE" in
 	"msys")
-		PYTHON="/c/Python37"
+		if [ -d "/c/Python37-x64" ]; then
+			PYTHON="/c/Python37-x64"
+		else
+			PYTHON="/c/Python37"
+		fi
 		sed -i 's/cmake_args.extend( \[/#cmake_args.extend( \[/' third_party/ycmd/build.py
 		grep -e HAVE_SNPRINTF third_party/ycmd/cpp/ycm/ClangCompleter/ClangHelpers.cpp || sed -i 's/#include "ClangHelpers.h"/#define HAVE_SNPRINTF\n#include "ClangHelpers.h"/' third_party/ycmd/cpp/ycm/ClangCompleter/ClangHelpers.cpp
 		"$PYTHON/python.exe" install.py --ninja --clang-completer
